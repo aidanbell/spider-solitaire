@@ -1,0 +1,29 @@
+body {
+
+}
+
+.game-board {
+  width: 200vmin;
+  border: 2px solid black;
+}
+
+.home {
+  border: 4px solid "light gray";
+  margin: none;
+  flex-direction: row;
+
+}
+
+#deck {
+  display: inline-block;
+}
+
+#top {
+  display: flex;
+
+}
+
+.home-wrapper {
+  display: flex;
+  margin-left: auto;
+}

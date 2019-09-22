@@ -1,0 +1,87 @@
+Select Game difficulty
+-one suit (easy)
+-two suits (medium)
+-four suits (hard)
+Select Number of decks
+-2 (104 cards even if only one suit is selected)
+-3 (156 cards)
+-4 (208 cards)
+
+Render Board
+-Deals 54 cards to 10 columns
+-[6, 5, 5, 6, 5, 5, 6, 5, 5, 6]
+-cards will be displayed staggered to see how many are below
+-remainder of cards will be left in stock, to deal if no more moves are available
+-cards face down will not be interactive
+-8 empty piles for the assembled runs to be collected in
+-assign cards value (suit-value)
+  -suits: [H, D, S, C]
+  -values: [1-13] (1 being Ace, 11, 12, 13 being Jack, Queen, King)
+
+[*]     {~} {~} {~} {~} {~} {~} {~} {~}
+[0] [1] [2] [3] [4] [5] [6] [7] [8] [9]
+
+*: Stock
+~: Home
+#: Stack
+
+-use position:absolute top 20px, 40px, 60px, etc...
+
+Playing
+-cards that are dealt face up can be played only on top of cards that are one
+  less in value, and the same suit
+-when a card is moved, the card underneath will be turned face-up
+-when all cards in a pile are removed, the space will be left blank
+-player can move any card or series of cards into the blank space
+  -however this is not mandatory
+-when no more moves are available, cards are dealt from the deck, one on each
+  pile
+-when the player has completed a full run (K-A), the cards will automatically
+  moved to the top of the board
+-when all cards have been moved to the top of the board, the game is over,
+  and a win message will be displayed
+
+/*----- constants -----*/
+suits = H, C, D, S
+value = 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13
+
+/*----- app's state (variables) -----*/
+deck = []
+columns = [
+  [cards....],
+  x10
+]
+stock = [leftover cards after deal]
+done/home = [
+  [full runs of cards],
+  x8
+]
+
+/*----- cached element references -----*/
+cards in play face up vs face down
+
+/*----- event listeners -----*/
+/*----- functions -----*/
+createDeck()
+  -loop through suits and value to create array of cards (x2)
+
+shuffleDeck()
+  -generate random number, swap those two indexes, decrement
+
+initialDeal()
+  -pop() cards from the deck array to each column until 54 cards are dealt
+
+moveCard()
+  -move selected card to selected stacks
+  -check if value of card selected is 1 lower than destination card
+
+checkStack()
+  -check to see if values in column array are sequential (1-13)
+  -if so, move to done/home
+
+flipCard()
+  -if card is the last in the column array, turn it face up
+
+dealMore()
+  -deals one card face up to each column
+  -push() card from stock to each column array
