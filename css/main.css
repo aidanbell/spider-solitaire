@@ -1,3 +1,7 @@
+/*=========="." is for CLASS==========*/
+/*=========="#" is for ID==========*/
+
+
 body {
 
 }
@@ -20,10 +24,26 @@ body {
 
 #top {
   display: flex;
+  margin-bottom: 120px;
 
 }
 
 .home-wrapper {
   display: flex;
   margin-left: auto;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  margin: 1vmin;
+}
+
+#column-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.column img {
+  margin-top: -110px;
 }

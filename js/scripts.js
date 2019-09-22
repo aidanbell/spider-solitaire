@@ -5,7 +5,8 @@ const suitPath = {
   's': "card-deck-css/images/spades/",
   'h': "card-deck-css/images/hearts/",
   'c': "card-deck-css/images/clubs/",
-  'd': "card-deck-css/images/diamonds",
+  'd': "card-deck-css/images/diamonds/",
+  'b': "card-deck-css/images/backs/blue.svg"
 }
 
 /*----- APP'S STATE (VARIABLES)-----*/
@@ -51,6 +52,7 @@ let home = {
 function init() {
   buildDeck();
   shuffleDeck();
+  initialDeal();
 }
 
 let buildDeck = () => {
@@ -77,29 +79,51 @@ function shuffleDeck() {
 //  Adds 54 cards to the column array, one column at a time.
 function initialDeal() {
   let num = 54;
-  let colId = 0;
+  let colIdx = 0;
   for (i = 0; i < 54; i++) {
-    let card = deck[0];
-    let loc = `c0${colId}`;
-    facedown(card, loc);
-    columns[colId].push(deck.shift());
-    colId === 9 ? colId = 0 : colId += 1;
-
+    columns[colIdx].push(deck.shift());
+    colIdx === 9 ? colIdx = 0 : colIdx += 1;
   }
 }
 
-function faceup(card, loc) {
-  let cardArr = card.split('-');
-  let currSuit = cardArr[0];
-  let newCardPath = `${suitPath[currSuit]}${card}.svg`;
-  let newCard = document.createElement("img");
-  newCard.src = newCardPath;
-  document.querySelector(`.column#${loc}`).appendChild(newCard);
+function facedown(locX) {
+  let col = `c0${locX}`;
+  let cardBack = document.createElement("img");
+  cardBack.src = suitPath['b'];
+  cardBack.className = "card large";
+  document.querySelector(`.column#${col}`).appendChild(cardBack);
 }
 
+function faceup(locX, locY) {
+  let card = getCard(locX, locY);
+  let cardArr = card.split('-');
+  let currSuit = cardArr[0];
+  let col = `c0${locX}`;
+  let newCardImgPath = `${suitPath[currSuit]}${card}.svg`;
+  let newCard = document.createElement("img");
+  newCard.src = newCardImgPath;
+  newCard.className = "card large";
+  document.querySelector(`.column#${col}`).appendChild(newCard);
+}
 
+function isLastInCol(locX, locY) {
+  return (locY === columns[locX].length -1) ? true : false;
+}
 
+function getCard(locX, locY) {
+  return columns[locX][locY];
+}
 
+function renderBoard() {
+  for (locX = 0; locX <= 9; locX++) {
+    for (locY = 0; locY <= columns[locX].length - 1; locY++) {
+      if (isLastInCol(locX, locY) === true) {
+        faceup(locX, locY);
+      } else {
+        facedown(locX);
+      }
+    }
+  }
+}
 init();
-initialDeal();
-console.log(columns[1]);
+renderBoard();
