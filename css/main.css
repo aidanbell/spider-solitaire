@@ -24,7 +24,6 @@ body {
 
 #top {
   display: flex;
-  margin-bottom: 120px;
 
 }
 
@@ -42,6 +41,7 @@ body {
 #column-wrapper {
   display: flex;
   flex-direction: row;
+  padding-top: 120px;
 }
 
 .column img {

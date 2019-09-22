@@ -48,6 +48,10 @@ let home = {
 
 
 /*----- EVENT LISTENERS -----*/
+document.querySelector('.game-board').addEventListener('click', handleClick);
+
+
+
 /*----- FUNCTIONS -----*/
 function init() {
   buildDeck();
@@ -65,6 +69,7 @@ let buildDeck = () => {
     }
   }
 }
+
 function shuffleDeck() {
   let i = 0, j = 0, temp = null;
 
@@ -86,12 +91,17 @@ function initialDeal() {
   }
 }
 
-function facedown(locX) {
+// TODO facedown and faceup only deal with inital dealing of cards.
+//      Either rename and make them specific to the initialDeal
+//      or retool them to be universal
+
+function facedown(locX, locY) {
   let col = `c0${locX}`;
-  let cardBack = document.createElement("img");
-  cardBack.src = suitPath['b'];
-  cardBack.className = "card large";
-  document.querySelector(`.column#${col}`).appendChild(cardBack);
+  let newCard = document.createElement("img");
+  newCard.src = suitPath['b'];
+  newCard.className = "card large";
+  newCard.id = `${locX}-${locY}`;
+  document.querySelector(`.column#${col}`).appendChild(newCard);
 }
 
 function faceup(locX, locY) {
@@ -103,6 +113,7 @@ function faceup(locX, locY) {
   let newCard = document.createElement("img");
   newCard.src = newCardImgPath;
   newCard.className = "card large";
+  newCard.id = `${locX}-${locY}`;
   document.querySelector(`.column#${col}`).appendChild(newCard);
 }
 
@@ -120,10 +131,18 @@ function renderBoard() {
       if (isLastInCol(locX, locY) === true) {
         faceup(locX, locY);
       } else {
-        facedown(locX);
+        facedown(locX, locY);
       }
     }
   }
+}
+
+function handleClick(evt) {
+  let coords = event.target.id;
+  let coordArr = coords.split('-');
+  let locX = coordArr[0];
+  let locY = coordArr[1];
+  console.log(columns[locX][locY]);
 }
 init();
 renderBoard();
