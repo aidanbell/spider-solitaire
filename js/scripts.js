@@ -60,6 +60,7 @@ function init() {
   initialDeal();
 }
 
+// Builds the deck based on input of how many suits are to be played
 let buildDeck = () => {
   let repeat = (4 / noOfSuits) * noOfDecks;
   for (i = 0; i < repeat; i++) {
@@ -74,6 +75,7 @@ let buildDeck = () => {
   }
 }
 
+// Shuffles the deck once it has been created
 function shuffleDeck() {
   let i = 0, j = 0, temp = null;
 
@@ -114,11 +116,6 @@ function initialDeal() {
 }
 
 
-function facedown(x, y) {
-
-}
-
-
 function isLastInCol(locX, locY) {
   return (locY === columns[locX].length -1) ? true : false;
 }
@@ -131,9 +128,6 @@ function isFaceUp(card) {
   }
 }
 
-function getCard(locX, locY) {
-  return columns[locX][locY];
-}
 
 function select(card) {
   if (isFaceUp(card) === false) return;
@@ -141,17 +135,22 @@ function select(card) {
    card.classList.add('active')
 }
 
-function move(card) {
+function move(card, colId) {
+  let selected = document.querySelector('.active');
+  let dest = document.querySelector(`#${colId}`)
+  selected.parentNode.removeChild(selected);
+  dest.appendChild(selected);
+  selected.classList.remove('active');
 
 }
 
 function handleClick(evt) {
-  let card = event.target.id;
+  let card = event.target;
   let colId = event.target.parentNode.id;
   let col = parseInt(colId.split('c0')[1]);
-  console.log(isFaceUp(event.target))
-  select(event.target);
-  console.log(card);
-  console.log(col);
+  document.querySelectorAll('.active').length === 0 ? select(card) : move(card, colId);
+  // console.log(isFaceUp(event.target))
+  // console.log(card);
+  // console.log(col);
 }
 init();
