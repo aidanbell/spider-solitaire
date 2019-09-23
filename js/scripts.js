@@ -44,6 +44,7 @@ let home = {
 }
 
 
+
 /*----- CACHED ELEMENT REFERENCES -----*/
 
 
@@ -64,7 +65,10 @@ let buildDeck = () => {
   for (i = 0; i < repeat; i++) {
     for (suit in suitsInPlay) {
       for (value in values) {
-        deck.push(`${suits[suit]}-${values[value]}`)
+        let obj = {};
+        obj.suit = suits[suit];
+        obj.value = values[value];
+        deck.push(obj);
       }
     }
   }
@@ -85,64 +89,60 @@ function shuffleDeck() {
 function initialDeal() {
   let num = 54;
   let colIdx = 0;
-  for (i = 0; i < 54; i++) {
+  // Deals 44 cards face down
+  for (i = 0; i < 44; i++) {
     columns[colIdx].push(deck.shift());
+    let card = columns[colIdx][columns[colIdx].length -1];
+    let newCard = document.createElement("img");
+    newCard.className = "card large fd";
+    newCard.id = `${card.suit}-${card.value}`;
+    newCard.src = suitPath['b'];
+    document.querySelector(`.column#c0${colIdx}`).appendChild(newCard);
+    colIdx === 9 ? colIdx = 0 : colIdx += 1;
+  }
+  // Deals the reimaing 10 face up
+  for (i = 0; i < 10; i++) {
+    columns[colIdx].push(deck.shift());
+    let card = columns[colIdx][columns[colIdx].length -1];
+    let newCard = document.createElement("img");
+    newCard.className = "card large fu";
+    newCard.id = `${card.suit}-${card.value}`;
+    newCard.src = `${suitPath[card.suit]}${newCard.id}.svg`;
+    document.querySelector(`.column#c0${colIdx}`).appendChild(newCard);
     colIdx === 9 ? colIdx = 0 : colIdx += 1;
   }
 }
 
-// TODO facedown and faceup only deal with inital dealing of cards.
-//      Either rename and make them specific to the initialDeal
-//      or retool them to be universal
 
-function facedown(locX, locY) {
-  let col = `c0${locX}`;
-  let newCard = document.createElement("img");
-  newCard.src = suitPath['b'];
-  newCard.className = "card large";
-  newCard.id = `${locX}-${locY}`;
-  document.querySelector(`.column#${col}`).appendChild(newCard);
+function facedown(x, y) {
+
 }
 
-function faceup(locX, locY) {
-  let card = getCard(locX, locY);
-  let cardArr = card.split('-');
-  let currSuit = cardArr[0];
-  let col = `c0${locX}`;
-  let newCardImgPath = `${suitPath[currSuit]}${card}.svg`;
-  let newCard = document.createElement("img");
-  newCard.src = newCardImgPath;
-  newCard.className = "card large";
-  newCard.id = `${locX}-${locY}`;
-  document.querySelector(`.column#${col}`).appendChild(newCard);
-}
 
 function isLastInCol(locX, locY) {
   return (locY === columns[locX].length -1) ? true : false;
+}
+
+function isFaceUp(card) {
+  if (card.classList.contains('fu')) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 function getCard(locX, locY) {
   return columns[locX][locY];
 }
 
-function renderBoard() {
-  for (locX = 0; locX <= 9; locX++) {
-    for (locY = 0; locY <= columns[locX].length - 1; locY++) {
-      if (isLastInCol(locX, locY) === true) {
-        faceup(locX, locY);
-      } else {
-        facedown(locX, locY);
-      }
-    }
-  }
-}
 
 function handleClick(evt) {
-  let coords = event.target.id;
-  let coordArr = coords.split('-');
-  let locX = coordArr[0];
-  let locY = coordArr[1];
-  console.log(columns[locX][locY]);
+  console.log(isFaceUp(event.target))
+  let card = event.target.id;
+  let colId = event.target.parentNode.id;
+  let col = parseInt(colId.split('c0')[1]);
+
+  console.log(card);
+  console.log(col);
 }
 init();
-renderBoard();
