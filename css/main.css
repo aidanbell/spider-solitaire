@@ -47,3 +47,7 @@ body {
 .column img {
   margin-top: -110px;
 }
+
+img.active {
+  border: 5px solid yellow;
+}

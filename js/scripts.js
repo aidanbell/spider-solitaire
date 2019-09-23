@@ -135,13 +135,22 @@ function getCard(locX, locY) {
   return columns[locX][locY];
 }
 
+function select(card) {
+  if (isFaceUp(card) === false) return;
+  if (document.querySelectorAll('.active').length === 1) return;
+   card.classList.add('active')
+}
+
+function move(card) {
+
+}
 
 function handleClick(evt) {
-  console.log(isFaceUp(event.target))
   let card = event.target.id;
   let colId = event.target.parentNode.id;
   let col = parseInt(colId.split('c0')[1]);
-
+  console.log(isFaceUp(event.target))
+  select(event.target);
   console.log(card);
   console.log(col);
 }
