@@ -43,6 +43,8 @@ let home = {
   7: [],
 }
 
+let cardsToMove = [];
+let cardsToRemove;
 
 
 /*----- CACHED ELEMENT REFERENCES -----*/
@@ -116,10 +118,6 @@ function initialDeal() {
 }
 
 
-function isLastInCol(locX, locY) {
-  return (locY === columns[locX].length -1) ? true : false;
-}
-
 function isFaceUp(card) {
   if (card.classList.contains('fu')) {
     return true;
@@ -129,26 +127,66 @@ function isFaceUp(card) {
 }
 
 
-function select(card) {
+function select(card, col) {
   if (isFaceUp(card) === false) return;
-  if (document.querySelectorAll('.active').length === 1) return;
-   card.classList.add('active')
+  card.classList.add('active')
+  let thisCard = parseId(card.id);
+   // console.log(thisCard.suit);
+   // console.log(columns[col][l-1].suit);
+   // console.log(thisCard.value);
+   // console.log(columns[col][l-1].value);
+  for (l = columns[col].length - 1; l >= 0; l--) {
+   if (columns[col][l].value === thisCard.value) {
+     cardsToMove = columns[col][l];
+
+   }
+  }
 }
 
-function move(card, colId) {
+function move(card, colId, col) {
+  if (card.classList.contains('active')) {
+    card.classList.remove('active')
+    return;
+  }
+  if (isSound(parseId(card.id)) === false) return;
+  console.log(isSound(parseId(card.id)));
   let selected = document.querySelector('.active');
   let dest = document.querySelector(`#${colId}`)
   selected.parentNode.removeChild(selected);
   dest.appendChild(selected);
   selected.classList.remove('active');
+  columns[col].push(cardsToMove);
+}
 
+function updateColumn() {
+
+}
+
+function isSound(card) {
+  let active = document.querySelector('.active');
+  let activeId = parseId(active.id);
+  // let prev = parseId(active.previousSibling.id);
+  if (card.value === activeId.value + 1) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function parseId(cardId) {
+  let cardArr = cardId.split('-');
+  let cardObj = {
+    'suit': cardArr[0],
+    'value': parseInt(cardArr[1])
+  }
+  return cardObj;
 }
 
 function handleClick(evt) {
   let card = event.target;
   let colId = event.target.parentNode.id;
   let col = parseInt(colId.split('c0')[1]);
-  document.querySelectorAll('.active').length === 0 ? select(card) : move(card, colId);
+  document.querySelectorAll('.active').length === 0 ? select(card, col) : move(card, colId, col);
   // console.log(isFaceUp(event.target))
   // console.log(card);
   // console.log(col);
