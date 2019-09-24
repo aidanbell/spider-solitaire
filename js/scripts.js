@@ -126,6 +126,11 @@ function isFaceUp(card) {
   }
 }
 
+// function needs to check if next sibling is null,
+// if it is, then re-render card face up
+function isLastInCol() {
+
+}
 
 function select(card, col) {
   if (isFaceUp(card) === false) return;
@@ -135,12 +140,12 @@ function select(card, col) {
    // console.log(columns[col][l-1].suit);
    // console.log(thisCard.value);
    // console.log(columns[col][l-1].value);
-  for (l = columns[col].length - 1; l >= 0; l--) {
-   if (columns[col][l].value === thisCard.value) {
-     cardsToMove = columns[col][l];
+  // for (l = columns[col].length - 1; l >= 0; l--) {
+  //  if (columns[col][l].value === thisCard.value) {
+  //    cardsToMove = columns[col][l];
 
-   }
-  }
+   // }
+  // }
 }
 
 function move(card, colId, col) {
@@ -155,12 +160,27 @@ function move(card, colId, col) {
   selected.parentNode.removeChild(selected);
   dest.appendChild(selected);
   selected.classList.remove('active');
-  columns[col].push(cardsToMove);
+  // columns[col].push(cardsToMove);
 }
 
-function updateColumn() {
-
+function updateColumn(colId, col) {
+  let column = document.getElementById(colId);
+  console.log(column);
+  let current = column.firstChild;
+  for (i = 0; i <= column.childElementCount; i++) {
+    // debugger
+    if (current !== null) {
+      let tempCard = parseId(current.id);
+      columns[col].splice(i, 1, tempCard);
+      current = current.nextSibling;
+      console.log(current);
+    } else {
+      columns[col].pop();
+    }
+  }
 }
+
+
 
 function isSound(card) {
   let active = document.querySelector('.active');
@@ -171,6 +191,14 @@ function isSound(card) {
   } else {
     return false;
   }
+}
+
+// Check nextSiblings until the next sibling is null
+// next sibling value must be equal to current value -1
+// if next value is not -1, then return
+// function needs to return the number of cards in the run
+function isRun(card) {
+  let col
 }
 
 function parseId(cardId) {
