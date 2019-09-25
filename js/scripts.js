@@ -159,42 +159,33 @@ function move(card, colId) {
   console.log(isSound(parseId(card.id)));
   //moves cards based on cardRun array
   // for card in cardRun {
-  //
-  // }
-  // isRun(card, colId);
+
   let dest = document.getElementById(colId);
   console.log(dest);
   for (i = 0; i <= cardRun.length - 1; i++) {
     dest.appendChild(cardRun[i]);
     cardRun[i].classList.remove('active', 'first', 'end')
-    // cardRun[i].parentNode.removeChild(cardRun[i]);
   }
-  // let selected = document.querySelector('.active');
-  // selected.parentNode.removeChild(selected);
-  // dest.appendChild(selected);
-  // selected.classList.remove('active');
-  // columns[col].push(cardsToMove);
-
-
   updateData();
 }
 
 
 
 function updateColumn(col) {
-  let id = `c0${col}`
-  let column = document.getElementById(id);
+  let column = document.getElementById(`c0${col}`);
   let current = column.firstChild;
-  for (i = 0; i < column.childElementCount; i++) {
-    // debugger
-    if (current !== null) {
-      let tempCard = parseId(current.id);
-      columns[col].splice(i, 1, tempCard);
-      current = current.nextSibling;
-    } else {
-      columns[col].pop();
-    }
+  let colCount = column.childElementCount;
+  let tempArr = [];
+
+  for (i = 0; i < colCount; i++) {
+    let tempCard = parseId(current.id);
+    // console.log(tempCard);
+    tempArr.push(tempCard);
+    // console.log(tempArr);
+    current = current.nextSibling;
   }
+  columns[col] = [];
+  columns.splice(col, 1, tempArr);
 }
 
 function updateData() {
@@ -233,6 +224,10 @@ function isRun(card, colId) {
   }
   cardRun.push(cardTemp);
   cardRun.length > 1 ? true : false;
+}
+
+function flipCard() {
+
 }
 
 function parseId(cardId) {
