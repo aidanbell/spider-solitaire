@@ -48,6 +48,19 @@ body {
   margin-top: -110px;
 }
 
-img.active {
+/* img.active {
   border: 5px solid yellow;
+} */
+
+img.active {
+  border-left: 5px solid yellow;
+  border-right: 5px solid yellow;
+}
+
+img.active.first {
+  border-top: 5px solid yellow;
+}
+
+img.active.end {
+  border-bottom: 5px solid yellow;
 }

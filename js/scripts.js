@@ -134,23 +134,21 @@ function isLastInCol() {
 }
 
 function select(card, colId, col) {
+  isRun(card, colId);
   if (isFaceUp(card) === false) return;
-  // if (isRun(card, colId) === true)
+  if (cardRun.length > 1) {
+    for (i = 0; i <= cardRun.length - 1; i++) {
+      cardRun[i].classList.add('active');
+      cardRun[0].classList.add('first');
+      cardRun[cardRun.length - 1].classList.add('end');
+    }
+    return;
+  }
   card.classList.add('active')
   let thisCard = parseId(card.id);
-   // console.log(thisCard.suit);
-   // console.log(columns[col][l-1].suit);
-   // console.log(thisCard.value);
-   // console.log(columns[col][l-1].value);
-  for (l = columns[col].length - 1; l >= 0; l--) {
-   if (columns[col][l].value === thisCard.value) {
-     cardsToMove = columns[col][l];
-
-   }
-  }
 }
 
-function move(card, colId, col) {
+function move(card, colId) {
   // function to deselect active card on second click
   if (card.classList.contains('active')) {
     card.classList.remove('active')
@@ -160,20 +158,28 @@ function move(card, colId, col) {
   if (isSound(parseId(card.id)) === false) return;
   console.log(isSound(parseId(card.id)));
   //moves cards based on cardRun array
-  for card in cardRun {
-    
+  // for card in cardRun {
+  //
+  // }
+  // isRun(card, colId);
+  let dest = document.getElementById(colId);
+  console.log(dest);
+  for (i = 0; i <= cardRun.length - 1; i++) {
+    dest.appendChild(cardRun[i]);
+    cardRun[i].classList.remove('active', 'first', 'end')
+    // cardRun[i].parentNode.removeChild(cardRun[i]);
   }
-
-  let selected = document.querySelector('.active');
-  let dest = document.querySelector(`#${colId}`)
-  selected.parentNode.removeChild(selected);
-  dest.appendChild(selected);
-  selected.classList.remove('active');
-  columns[col].push(cardsToMove);
+  // let selected = document.querySelector('.active');
+  // selected.parentNode.removeChild(selected);
+  // dest.appendChild(selected);
+  // selected.classList.remove('active');
+  // columns[col].push(cardsToMove);
 
 
-  // updateData();
+  updateData();
 }
+
+
 
 function updateColumn(col) {
   let id = `c0${col}`
@@ -213,20 +219,20 @@ function isSound(card) {
 // if next value is not -1, then return
 // function needs to return the number of cards in the run
 function isRun(card, colId) {
+  cardRun = [];
   let cardTemp = card;
   // let nextSib = cardTemp.nextSibling;
   while (cardTemp.nextSibling !== null) {
     // debugger
     if (parseId(cardTemp.id).value === parseId(cardTemp.nextSibling.id).value + 1) {
-      cardRun.push(parseId(cardTemp.id));
-      console.log(parseId(cardTemp.id));
+      cardRun.push(cardTemp);
       cardTemp = cardTemp.nextSibling;
     } else {
       return;
     }
   }
-  cardRun.push(parseId(cardTemp.id));
-  console.log(cardRun);
+  cardRun.push(cardTemp);
+  cardRun.length > 1 ? true : false;
 }
 
 function parseId(cardId) {
@@ -242,7 +248,7 @@ function handleClick(evt) {
   let card = event.target;
   let colId = event.target.parentNode.id;
   let col = parseInt(colId.split('c0')[1]);
-  document.querySelectorAll('.active').length === 0 ? select(card, colId, col) : move(card, colId, col);
+  document.querySelectorAll('.active').length === 0 ? select(card, colId, col) : move(card, colId);
   // updateColumn(colId, col);
   // console.log(isFaceUp(event.target))
   // console.log(card);
