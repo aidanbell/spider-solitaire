@@ -119,6 +119,7 @@ function initialDeal() {
 }
 
 
+
 function isFaceUp(card) {
   if (card.classList.contains('fu')) {
     return true;
@@ -127,11 +128,6 @@ function isFaceUp(card) {
   }
 }
 
-// function needs to check if next sibling is null,
-// if it is, then re-render card face up
-function isLastInCol() {
-
-}
 
 function select(card, colId, col) {
   isRun(card, colId);
@@ -167,6 +163,7 @@ function move(card, colId) {
     cardRun[i].classList.remove('active', 'first', 'end')
   }
   updateData();
+  flipCard();
 }
 
 
@@ -205,10 +202,7 @@ function isSound(card) {
   }
 }
 
-// Check nextSiblings until the next sibling is null
-// next sibling value must be equal to current value -1
-// if next value is not -1, then return
-// function needs to return the number of cards in the run
+
 function isRun(card, colId) {
   cardRun = [];
   let cardTemp = card;
@@ -226,8 +220,17 @@ function isRun(card, colId) {
   cardRun.length > 1 ? true : false;
 }
 
-function flipCard() {
 
+function flipCard() {
+  for (i = 0; i < columns.length; i++) {
+    let col = document.getElementById(`c0${i}`);
+    if (col.lastChild.classList.contains('fd')) {
+      let card = parseId(col.lastChild.id);
+      col.lastChild.src = `${suitPath[card.suit]}${col.lastChild.id}.svg`;
+      col.lastChild.classList.remove('fd');
+      col.lastChild.classList.add('fu');
+    }
+  }
 }
 
 function parseId(cardId) {
