@@ -7,7 +7,7 @@ body {
 }
 
 .game-board {
-  width: 200vmin;
+  width: 1250px;
   border: 2px solid black;
 }
 
@@ -32,11 +32,27 @@ body {
   margin-left: auto;
 }
 
+.empty {
+  border-radius: 0.20em;
+  align-self: center;
+  width: 98px;
+  height: 147px;
+  border: 3px solid gray;
+  margin: 5px;
+  flex-direction: row;
+}
+
+
 .column {
   display: flex;
   flex-direction: column;
-  margin: 1vmin;
+  margin: 5px;
   padding-top: 120px;
+  width: 143px;
+}
+
+.column > .empty {
+  margin-bottom: -43px;
 }
 
 #column-wrapper {
@@ -48,9 +64,6 @@ body {
   margin-top: -110px;
 }
 
-/* img.active {
-  border: 5px solid yellow;
-} */
 
 img.active {
   border-left: 5px solid yellow;

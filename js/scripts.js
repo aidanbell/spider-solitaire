@@ -31,7 +31,6 @@ let columns = [
   [],
 ]
 
-let stock = []
 let home = {
   0: [],
   1: [],
@@ -43,8 +42,7 @@ let home = {
   7: [],
 }
 
-let cardsToMove = [];
-let cardsToRemove;
+let dealsRemaining = deck.length;
 let cardRun = [];
 
 
@@ -53,7 +51,7 @@ let cardRun = [];
 
 /*----- EVENT LISTENERS -----*/
 document.querySelector('.game-board').addEventListener('click', handleClick);
-
+document.querySelector('#deck').addEventListener('click', dealMore);
 
 
 /*----- FUNCTIONS -----*/
@@ -92,7 +90,6 @@ function shuffleDeck() {
 
 //  Adds 54 cards to the column array, one column at a time.
 function initialDeal() {
-  let num = 54;
   let colIdx = 0;
   // Deals 44 cards face down
   for (i = 0; i < 44; i++) {
@@ -118,7 +115,17 @@ function initialDeal() {
   }
 }
 
-
+function dealMore() {
+  for (i = 0; i < 10; i++) {
+    columns[i].push(deck.shift());
+    let card = columns[i][columns[i].length -1];
+    let newCard = document.createElement("img");
+    newCard.className = "card large fu";
+    newCard.id = `${card.suit}-${card.value}`;
+    newCard.src = `${suitPath[card.suit]}${newCard.id}.svg`;
+    document.querySelector(`.column#c0${i}`).appendChild(newCard);
+  }
+}
 
 function isFaceUp(card) {
   if (card.classList.contains('fu')) {
@@ -131,6 +138,7 @@ function isFaceUp(card) {
 
 function select(card, colId, col) {
   isRun(card, colId);
+  isComplete(card);
   if (isFaceUp(card) === false) return;
   if (cardRun.length > 1) {
     for (i = 0; i <= cardRun.length - 1; i++) {
@@ -139,25 +147,28 @@ function select(card, colId, col) {
       cardRun[cardRun.length - 1].classList.add('end');
     }
     return;
+  } else if (cardRun.length === 0) {
+    return;
   }
   card.classList.add('active')
-  let thisCard = parseId(card.id);
 }
 
 function move(card, colId) {
   // function to deselect active card on second click
   if (card.classList.contains('active')) {
-    card.classList.remove('active')
+    cardRun.forEach(function(c){
+      c.classList.remove('active', 'first', 'end');
+
+    })
     return;
+    // card.classList.remove('active')
+    // return;
   }
   // checks ifSound to see if the move is allowed
-  if (isSound(parseId(card.id)) === false) return;
-  console.log(isSound(parseId(card.id)));
+  if (isSound(card) === false) return;
   //moves cards based on cardRun array
   // for card in cardRun {
-
   let dest = document.getElementById(colId);
-  console.log(dest);
   for (i = 0; i <= cardRun.length - 1; i++) {
     dest.appendChild(cardRun[i]);
     cardRun[i].classList.remove('active', 'first', 'end')
@@ -170,15 +181,13 @@ function move(card, colId) {
 
 function updateColumn(col) {
   let column = document.getElementById(`c0${col}`);
-  let current = column.firstChild;
+  let current = column.querySelector('.card');
   let colCount = column.childElementCount;
   let tempArr = [];
 
-  for (i = 0; i < colCount; i++) {
+  for (i = 0; i < colCount - 1; i++) {
     let tempCard = parseId(current.id);
-    // console.log(tempCard);
     tempArr.push(tempCard);
-    // console.log(tempArr);
     current = current.nextSibling;
   }
   columns[col] = [];
@@ -192,34 +201,58 @@ function updateData() {
 }
 
 function isSound(card) {
+  let current = parseId(card.id)
   let active = document.querySelector('.active');
   let activeId = parseId(active.id);
   // let prev = parseId(active.previousSibling.id);
-  if (card.value === activeId.value + 1) {
+  if (current.value === activeId.value + 1) {
+    return true;
+  } else if (card.classList.contains('empty')) {
     return true;
   } else {
     return false;
   }
 }
 
+function runComplete() {
+  cardRun.forEach(function(c) {
+    c.parentNode.removeChild(c);
+  })
+  let homeArr = document.querySelectorAll('.home-wrapper .empty');
+  console.log(homeArr);
+  homeArr[homeArr.length - 1].src = suitPath['b'];
+  flipCard();
+}
 
 function isRun(card, colId) {
   cardRun = [];
   let cardTemp = card;
-  // let nextSib = cardTemp.nextSibling;
   while (cardTemp.nextSibling !== null) {
-    // debugger
     if (parseId(cardTemp.id).value === parseId(cardTemp.nextSibling.id).value + 1) {
       cardRun.push(cardTemp);
       cardTemp = cardTemp.nextSibling;
     } else {
-      return;
+      cardRun = [];
     }
   }
   cardRun.push(cardTemp);
   cardRun.length > 1 ? true : false;
 }
 
+function isComplete(card) {
+  if (parseId(cardRun[0].id).value === 13 && cardRun.length === 13) {
+    console.log('Done');
+    runComplete();
+  }
+}
+
+function isEmpty(card) {
+  if (card.classList.contains('empty')) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 function flipCard() {
   for (i = 0; i < columns.length; i++) {
@@ -247,9 +280,5 @@ function handleClick(evt) {
   let colId = event.target.parentNode.id;
   let col = parseInt(colId.split('c0')[1]);
   document.querySelectorAll('.active').length === 0 ? select(card, colId, col) : move(card, colId);
-  // updateColumn(colId, col);
-  // console.log(isFaceUp(event.target))
-  // console.log(card);
-  // console.log(col);
 }
 init();
