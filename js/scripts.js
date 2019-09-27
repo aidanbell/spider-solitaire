@@ -42,19 +42,19 @@ let home = {
   7: [],
 }
 
-let dealsRemaining = deck.length;
+let dealsRemaining;
 let cardRun = [];
 
 
 /*----- CACHED ELEMENT REFERENCES -----*/
 
-
 /*----- EVENT LISTENERS -----*/
 document.querySelector('.game-board').addEventListener('click', handleClick);
 document.querySelector('#deck').addEventListener('click', dealMore);
 
-
 /*----- FUNCTIONS -----*/
+
+
 function init() {
   buildDeck();
   shuffleDeck();
@@ -113,6 +113,8 @@ function initialDeal() {
     document.querySelector(`.column#c0${colIdx}`).appendChild(newCard);
     colIdx === 9 ? colIdx = 0 : colIdx += 1;
   }
+  dealsRemaining = deck.length / 10
+  document.querySelector('.deals').textContent = `${dealsRemaining} Deals Remaining.`
 }
 
 function dealMore() {
@@ -124,7 +126,19 @@ function dealMore() {
     newCard.id = `${card.suit}-${card.value}`;
     newCard.src = `${suitPath[card.suit]}${newCard.id}.svg`;
     document.querySelector(`.column#c0${i}`).appendChild(newCard);
+    dealsRemaining = deck.length / 10
   }
+  if (dealsRemaining === 0) {
+    let homeDeck = document.getElementById('deck').firstChild;
+    homeDeck.src = ' ';
+    homeDeck.classList.remove('card', 'large');
+    homeDeck.classList.add('empty');
+    document.querySelector('.deals').textContent = `0 Deals Remaining.`
+    document.querySelector('#deck').removeEventListener('click', dealMore);
+    return;
+  }
+  dealsRemaining = deck.length / 10
+  document.querySelector('.deals').textContent = `${dealsRemaining} Deals Remaining.`
 }
 
 function isFaceUp(card) {
@@ -150,7 +164,7 @@ function select(card, colId, col) {
   } else if (cardRun.length === 0) {
     return;
   }
-  card.classList.add('active')
+  card.classList.add('active', 'first', 'end');
 }
 
 function move(card, colId) {
@@ -177,7 +191,12 @@ function move(card, colId) {
   flipCard();
 }
 
-
+// Synchronize the DOM and the game data
+function updateData() {
+  for (t = 0; t < 10; t++) {
+    updateColumn(t);
+  }
+}
 
 function updateColumn(col) {
   let column = document.getElementById(`c0${col}`);
@@ -194,12 +213,7 @@ function updateColumn(col) {
   columns.splice(col, 1, tempArr);
 }
 
-function updateData() {
-  for (t = 0; t < 10; t++) {
-    updateColumn(t);
-  }
-}
-
+//Checks to see if the move is allowed
 function isSound(card) {
   let current = parseId(card.id)
   let active = document.querySelector('.active');
@@ -214,16 +228,7 @@ function isSound(card) {
   }
 }
 
-function runComplete() {
-  cardRun.forEach(function(c) {
-    c.parentNode.removeChild(c);
-  })
-  let homeArr = document.querySelectorAll('.home-wrapper .empty');
-  console.log(homeArr);
-  homeArr[homeArr.length - 1].src = suitPath['b'];
-  flipCard();
-}
-
+// Checks the card selected to see how many subsequent cards should be selected
 function isRun(card, colId) {
   cardRun = [];
   let cardTemp = card;
@@ -239,11 +244,24 @@ function isRun(card, colId) {
   cardRun.length > 1 ? true : false;
 }
 
+// Checks to see if the user has made a run of K-A
 function isComplete(card) {
   if (parseId(cardRun[0].id).value === 13 && cardRun.length === 13) {
-    console.log('Done');
     runComplete();
   }
+}
+
+// And removes the cards from the board, updating the home row
+function runComplete() {
+  let homeArr = [];
+  cardRun.forEach(function(c) {
+    c.parentNode.removeChild(c);
+  })
+  homeArr = document.querySelectorAll('.home-wrapper .empty');
+  homeArr[homeArr.length - 1].src = suitPath['b'];
+  homeArr[homeArr.length - 1].classList.remove('empty')
+  homeArr[homeArr.length - 1].classList.add('done', 'card', 'large');
+  flipCard();
 }
 
 function isEmpty(card) {
@@ -257,7 +275,8 @@ function isEmpty(card) {
 function flipCard() {
   for (i = 0; i < columns.length; i++) {
     let col = document.getElementById(`c0${i}`);
-    if (col.lastChild.classList.contains('fd')) {
+    if (col.lastElementChild.classList.contains('empty')) {
+    } else if (col.lastElementChild.classList.contains('fd')) {
       let card = parseId(col.lastChild.id);
       col.lastChild.src = `${suitPath[card.suit]}${col.lastChild.id}.svg`;
       col.lastChild.classList.remove('fd');
@@ -276,6 +295,8 @@ function parseId(cardId) {
 }
 
 function handleClick(evt) {
+  if (event.target.id === 'column-wrapper' || event.target.id === 'top') return;
+  if (event.target.classList.contains('column') || event.target.classList.contains('home-wrapper')) return;
   let card = event.target;
   let colId = event.target.parentNode.id;
   let col = parseInt(colId.split('c0')[1]);

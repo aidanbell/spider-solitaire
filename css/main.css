@@ -3,12 +3,44 @@
 
 
 body {
+  display: flex;
+  align-items: center;
+  max-width: 1250px;
+  margin: auto;
+  font-family: Helvetica, sans-serif;
+}
 
+.info {
+  margin-top: 10px;
+}
+
+.info-content {
+  width: 1250px;
+  background-color: #d9d9d9;
+  border: 2px solid black;
+}
+
+p {
+  margin: 5px;
+}
+
+span.ital {
+  font-style: italic;
+}
+h1, h2, h3 {
+  text-align: center;
+}
+
+h3 {
+  text-transform: uppercase;
 }
 
 .game-board {
   width: 1250px;
   border: 2px solid black;
+  align-self: center;
+  background-color: #999999;
+  margin-bottom: 10px;
 }
 
 .home {
@@ -35,8 +67,8 @@ body {
 .empty {
   border-radius: 0.20em;
   align-self: center;
-  width: 98px;
-  height: 147px;
+  width: 97px;
+  height: 130px;
   border: 3px solid gray;
   margin: 5px;
   flex-direction: row;
@@ -47,12 +79,12 @@ body {
   display: flex;
   flex-direction: column;
   margin: 5px;
-  padding-top: 120px;
+  padding-top: 10px;
   width: 143px;
 }
 
 .column > .empty {
-  margin-bottom: -43px;
+  margin-bottom: -26px;
 }
 
 #column-wrapper {
@@ -66,14 +98,14 @@ body {
 
 
 img.active {
-  border-left: 5px solid yellow;
-  border-right: 5px solid yellow;
+  border-left: 5px solid #ccff66;
+  border-right: 5px solid #ccff66;
 }
 
 img.active.first {
-  border-top: 5px solid yellow;
+  border-top: 5px solid #ccff66;
 }
 
 img.active.end {
-  border-bottom: 5px solid yellow;
+  border-bottom: 5px solid #ccff66;
 }

@@ -1,40 +1,32 @@
 # SPIDER SOLITAIRE
-
-## About
-I'm going to put an 'About' section here.
+![Imgur](https://i.imgur.com/eLJE9Mu.png)
 
 
-## ToDo:
 
-### Columns
-- Expand handleClick to add .active class to the selected card
-- Add exception for accidentally clicking the wrapper
-- ReTool the faceup/facedown functions to be universal, not tied to deal
-- Write function to automatically turn the last card in the column face up
-- Figure out updating columns after every turn
-- Figure out moving the cards
+
+## Technologies Used:
+- HTML & CSS
+- Javascript  
+
+## Getting Started:
+[Click here to play!](https://aidanbell.github.io/spider-solitaire/)
+
+In spider solitaire you are dealt 54 cards to the board, your goal is
+to create runs of cards, from K to A. To play, click on the card you would
+like to move, and then click on its destination. Once you are out of moves,
+clicking the deck in the top left corner will deal one additional card onto
+every column. To move a run of cards, click on the highest value card in the
+run, and all of the subsequent cards will be selected. If an empty
+space exsists in the game board, you can move any card or run to it.
+(Officially, you're supposed to only move a King to an open space, but I won't
+tell anyone.) Once you have a run from K to A, clicking on the first card in the
+run (the King), will clear the cards from the board, and allow you to keep playing.
+The game is over when all 8 K-A runs have been cleared.
+
+## Next Steps
 - Try HTML5 Drag and drop OR select card => select destination
-- Write function to see if cards are allowed to be placed
-- Write function to select stack when clicking on middle card
-- Create win logic
--
-
-### Deck
 - Display staggered piles indicating the amount of deals left
-- Add event listener to deck
-- Write dealOne function to add one card to each column
-  - (which would use isLastInCol checker to turn face-up; DRY code)
-  - also removes one pile from display
-- sounds when dealing maybe?
-
-### Footer
-- First of all, ADD a footer
-- Have buttons for
-  - 'New Game'
-  - 'Hint'(maybe?)
-  - 'Settings' (for more suits)
-
-### Intro Screen
-- Have transparent div that shows instructions
-- Asks for number of suits
-- Maybe select card background since I have red and blue 
+- Sounds when dealing maybe?
+- Allow user to select suit of choice
+- Allow user to play with more than one suit
+- Allow user to select from a choice of card backs
