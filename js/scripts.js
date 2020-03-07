@@ -130,7 +130,7 @@ function dealMore() {
   }
   if (dealsRemaining === 0) {
     let homeDeck = document.getElementById('deck').firstChild;
-    homeDeck.src = ' ';
+    homeDeck.src = '';
     homeDeck.classList.remove('card', 'large');
     homeDeck.classList.add('empty');
     document.querySelector('.deals').textContent = `0 Deals Remaining.`
@@ -230,23 +230,23 @@ function isSound(card) {
 
 // Checks the card selected to see how many subsequent cards should be selected
 function isRun(card, colId) {
-  cardRun = [];
   let cardTemp = card;
+  cardRun = [cardTemp];
   while (cardTemp.nextSibling !== null) {
     if (parseId(cardTemp.id).value === parseId(cardTemp.nextSibling.id).value + 1) {
-      cardRun.push(cardTemp);
       cardTemp = cardTemp.nextSibling;
+      cardRun.push(cardTemp);
     } else {
       cardRun = [];
+      break;
     }
   }
-  cardRun.push(cardTemp);
   cardRun.length > 1 ? true : false;
 }
 
 // Checks to see if the user has made a run of K-A
 function isComplete(card) {
-  if (parseId(cardRun[0].id).value === 13 && cardRun.length === 13) {
+  if (cardRun.length === 13 && parseId(cardRun[0].id).value === 13) {
     runComplete();
   }
 }
